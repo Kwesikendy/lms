@@ -4,6 +4,9 @@
   "private": true,
   "description": "Premium Glassmorphism Learning Management System with LiveKit Classroom & Ghana-first Payments",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "node --import tsx src/server/index.ts",
     "build": "vite build && tsc --noEmit",

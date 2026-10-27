@@ -16,7 +16,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const clientDist = path.resolve(process.cwd(), 'dist', 'client');
+    const clientDist = path.resolve(process.cwd(), 'dist');
     if (fs.existsSync(clientDist)) {
       app.use(express.static(clientDist));
       app.get('*', (req, res, next) => {

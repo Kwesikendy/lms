@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { config } from '../config.js';
+import { SQLITE_SCHEMA } from './schema-sqlite.js';
 
 let dbInstance: DatabaseSync | null = null;
 
@@ -39,12 +40,26 @@ export function resetTestDb(): DatabaseSync {
 }
 
 export function runMigrations(db: DatabaseSync): void {
-  const migrationPath = path.resolve(
-    process.cwd(),
-    'migrations',
-    '001_initial_schema.sqlite.sql'
-  );
-  const sql = fs.readFileSync(migrationPath, 'utf-8');
+  const possiblePaths = [
+    path.resolve(process.cwd(), 'migrations', '001_initial_schema.sqlite.sql'),
+    path.resolve(__dirname, '..', '..', 'migrations', '001_initial_schema.sqlite.sql'),
+    path.resolve(__dirname, '..', 'migrations', '001_initial_schema.sqlite.sql'),
+    path.resolve('/var/task', 'migrations', '001_initial_schema.sqlite.sql'),
+  ];
+  let sql = '';
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        sql = fs.readFileSync(p, 'utf-8');
+        break;
+      } catch {
+        // try next path
+      }
+    }
+  }
+  if (!sql) {
+    sql = SQLITE_SCHEMA;
+  }
   db.exec(sql);
 }
 

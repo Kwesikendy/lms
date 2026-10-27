@@ -19,7 +19,10 @@ export const config = {
     process.env.MEDIA_SIGNING_SECRET ||
     'aether_dev_media_signing_secret_change_in_prod_1234567890abcdef',
   sqliteDbPath:
-    process.env.SQLITE_DB_PATH || path.resolve(process.cwd(), 'data', 'lms.sqlite'),
+    process.env.SQLITE_DB_PATH ||
+    (process.env.VERCEL
+      ? path.join('/tmp', 'lms.sqlite')
+      : path.resolve(process.cwd(), 'data', 'lms.sqlite')),
   databaseUrl: process.env.DATABASE_URL || '',
 
   livekit: {
@@ -67,7 +70,10 @@ export const config = {
   storage: {
     driver: (process.env.STORAGE_DRIVER || 'local') as 'local' | 's3',
     localDir:
-      process.env.STORAGE_LOCAL_DIR || path.resolve(process.cwd(), 'uploads'),
+      process.env.STORAGE_LOCAL_DIR ||
+      (process.env.VERCEL
+        ? path.join('/tmp', 'uploads')
+        : path.resolve(process.cwd(), 'uploads')),
     s3Bucket: process.env.S3_BUCKET || '',
     s3Region: process.env.S3_REGION || 'eu-west-1',
     s3Endpoint: process.env.S3_ENDPOINT || '',
