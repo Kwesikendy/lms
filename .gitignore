@@ -1,0 +1,12 @@
+node_modules/
+dist/
+data/
+uploads/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+credentials.json
+*.log

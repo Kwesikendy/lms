@@ -1,0 +1,350 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   DESIGN TOKENS
+   Light is the default. `.dark` swaps the same semantic names, so components
+   never branch on theme. Warm neutrals + one vermilion accent.
+   ========================================================================== */
+:root {
+  --paper: #f4f1ea;
+  --canvas: #faf8f4;
+  --card: #ffffff;
+  --ink: #15171c;
+  --ink-2: #41454f;
+  --ink-3: #5e636e;
+  --on-ink: #ffffff;
+  --line: #e6e2d9;
+  --line-strong: #cfcabd;
+
+  --accent: #d6431a;
+  --accent-ink: #b0340f;
+  --accent-soft: #fce6dd;
+  --on-accent: #ffffff;
+
+  --sage: #dce7d8;
+  --sage-ink: #2c5a38;
+  --sky: #dae7f2;
+  --sky-ink: #1e4c78;
+  --sand: #f0e2c6;
+  --sand-ink: #74500f;
+  --plum: #e7dceb;
+  --plum-ink: #583663;
+
+  --success: #1f7a4d;
+  --success-soft: #ddf0e5;
+  --warn: #8f5200;
+  --warn-soft: #f8e8c8;
+  --danger: #b42318;
+  --danger-soft: #fbe0dc;
+
+  --night: #101116;
+  --glass-bg: rgba(255, 255, 255, 0.66);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --scrim: rgba(21, 23, 28, 0.45);
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #111215;
+  --canvas: #16171b;
+  --card: #1b1d22;
+  --ink: #f3f1eb;
+  --ink-2: #c8c6bf;
+  --ink-3: #9b9992;
+  --on-ink: #111215;
+  --line: #2a2c33;
+  --line-strong: #3b3e47;
+
+  --accent: #ff6b3d;
+  --accent-ink: #ff8a63;
+  --accent-soft: #33201a;
+  --on-accent: #1a0a04;
+
+  --sage: #223127;
+  --sage-ink: #a9d4b3;
+  --sky: #1e2b38;
+  --sky-ink: #9cc4ea;
+  --sand: #3a3020;
+  --sand-ink: #e8cb8e;
+  --plum: #2f2535;
+  --plum-ink: #d1b1dd;
+
+  --success: #5bd08f;
+  --success-soft: #14301f;
+  --warn: #f0b84d;
+  --warn-soft: #36290f;
+  --danger: #ff8a7e;
+  --danger-soft: #3a1815;
+
+  --night: #0a0b0e;
+  --glass-bg: rgba(27, 29, 34, 0.68);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --scrim: rgba(0, 0, 0, 0.62);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-paper: var(--paper);
+  --color-canvas: var(--canvas);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-on-ink: var(--on-ink);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-sage: var(--sage);
+  --color-sage-ink: var(--sage-ink);
+  --color-sky: var(--sky);
+  --color-sky-ink: var(--sky-ink);
+  --color-sand: var(--sand);
+  --color-sand-ink: var(--sand-ink);
+  --color-plum: var(--plum);
+  --color-plum-ink: var(--plum-ink);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-night: var(--night);
+
+  --shadow-soft: 0 1px 2px rgb(21 23 28 / 0.04), 0 10px 28px -14px rgb(21 23 28 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(21 23 28 / 0.05), 0 22px 44px -18px rgb(21 23 28 / 0.28);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-feature-settings: "ss01", "cv11";
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+   SURFACES
+   Glass is reserved for floating chrome: nav, popovers, dock, mobile bar.
+   Everything you read or type into sits on a solid card.
+   ========================================================================== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.5) inset, 0 12px 32px -16px rgb(21 23 28 / 0.25);
+}
+
+.glass-night {
+  background: rgba(18, 19, 25, 0.66);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.6);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass {
+    background: var(--card);
+  }
+  .glass-night {
+    background: #15161c;
+  }
+}
+
+.atmosphere {
+  position: relative;
+  isolation: isolate;
+}
+.atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: -10% -10% auto -10%;
+  height: 90%;
+  z-index: -1;
+  background:
+    radial-gradient(40% 50% at 12% 20%, color-mix(in srgb, var(--sand) 90%, transparent), transparent 70%),
+    radial-gradient(34% 44% at 86% 8%, color-mix(in srgb, var(--accent-soft) 90%, transparent), transparent 70%),
+    radial-gradient(30% 40% at 70% 78%, color-mix(in srgb, var(--sage) 85%, transparent), transparent 70%);
+  filter: blur(8px);
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.dark .grain::after {
+  mix-blend-mode: screen;
+  opacity: 0.2;
+}
+
+/* ==========================================================================
+   COMPONENT HELPERS
+   ========================================================================== */
+.table-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.table-clean th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.table-clean td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.table-clean tbody tr {
+  transition: background-color 150ms;
+}
+.table-clean tbody tr:hover {
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+}
+.table-clean tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rich {
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 68ch;
+}
+.rich h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 2rem 0 0.75rem;
+}
+.rich h3:first-child {
+  margin-top: 0;
+}
+.rich p {
+  margin: 0 0 1rem;
+}
+.rich ul,
+.rich ol {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+.rich ul {
+  list-style: disc;
+}
+.rich ol {
+  list-style: decimal;
+}
+.rich li {
+  margin: 0.35rem 0;
+  padding-left: 0.25rem;
+}
+.rich li::marker {
+  color: var(--accent);
+}
+.rich strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.rich code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  padding: 0.12em 0.4em;
+  border-radius: 0.4em;
+  color: var(--ink);
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

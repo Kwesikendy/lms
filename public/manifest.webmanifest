@@ -1,0 +1,18 @@
+{
+  "name": "Aether Academy — Learning Management System",
+  "short_name": "Aether LMS",
+  "description": "Online courses, digital library, and LiveKit interactive classrooms.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060913",
+  "theme_color": "#060913",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

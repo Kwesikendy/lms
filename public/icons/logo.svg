@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="aetherGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#A855F7" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#0B1021" stroke="url(#aetherGrad)" stroke-width="2.5"/>
+  <path d="M32 15L48 45H40.5L36.8 37.5H27.2L23.5 45H16L32 15ZM34 31.5L32 27L30 31.5H34Z" fill="url(#aetherGrad)"/>
+</svg>
