@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Premium Glassmorphism Learning Management System with LiveKit Classroom & Ghana-first Payments",
-  "type": "module",
   "engines": {
     "node": ">=20.0.0"
   },
