@@ -10,7 +10,7 @@ function getApp() {
   return appInstance;
 }
 
-export default function handler(req: IncomingMessage, res: ServerResponse) {
+function handler(req: IncomingMessage, res: ServerResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -23,4 +23,14 @@ export default function handler(req: IncomingMessage, res: ServerResponse) {
 
   const app = getApp();
   return app(req, res);
+}
+
+// Support both ESM and CommonJS invocation by Vercel serverless
+export default handler;
+// @ts-ignore
+if (typeof module !== 'undefined' && module.exports) {
+  // @ts-ignore
+  module.exports = handler;
+  // @ts-ignore
+  module.exports.default = handler;
 }
