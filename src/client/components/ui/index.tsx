@@ -29,20 +29,21 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 /* ============================================================================
    BUTTONS
    ============================================================================ */
-type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'danger' | 'dark' | 'light';
+type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'danger' | 'dark' | 'light' | 'glass';
 type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const buttonBase =
-  'inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap select-none cursor-pointer transition-[background-color,color,border-color,box-shadow,transform,opacity] duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45';
+  'inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap select-none cursor-pointer transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45';
 
 const buttonVariants: Record<ButtonVariant, string> = {
-  primary: 'bg-ink text-on-ink hover:opacity-85 shadow-sm',
-  accent: 'bg-accent text-on-accent hover:brightness-110 shadow-sm',
-  secondary: 'border border-line-strong bg-card text-ink hover:border-ink',
+  primary: 'bg-ink text-on-ink hover:opacity-90 shadow-sm',
+  accent: 'bg-accent text-on-accent hover:brightness-110 shadow-glow',
+  secondary: 'border border-line-strong bg-card text-ink hover:border-ink hover:bg-card/90 shadow-2xs',
   ghost: 'text-ink-2 hover:bg-ink/6 hover:text-ink',
   danger: 'border border-danger/30 bg-card text-danger hover:bg-danger-soft',
-  dark: 'border border-white/15 bg-white/10 text-white hover:bg-white/20',
-  light: 'bg-white text-[#15171c] hover:bg-white/90',
+  dark: 'border border-white/15 bg-white/10 text-white hover:bg-white/20 backdrop-blur-md',
+  light: 'bg-white text-[#0f172a] hover:bg-white/90 shadow-sm',
+  glass: 'glass text-ink hover:border-line-strong hover:bg-card shadow-2xs',
 };
 
 const buttonSizes: Record<ButtonSize, string> = {
@@ -158,11 +159,11 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const cardTones: Record<NonNullable<CardProps['tone']>, string> = {
-  plain: 'border border-line bg-card shadow-soft',
+  plain: 'border border-line bg-card shadow-soft backdrop-blur-md',
   flat: 'border border-line bg-card',
   tint: 'border border-line bg-canvas',
   glass: 'glass',
-  night: 'bg-night text-white border border-white/5',
+  night: 'glass-night text-white',
 };
 
 export function Card({

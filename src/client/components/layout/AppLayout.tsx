@@ -52,11 +52,11 @@ const instructorNav: NavItem[] = [
 function Logo({ name }: { name: string }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className="relative grid size-9 place-items-center rounded-xl bg-ink text-on-ink">
-        <span className="display text-lg leading-none">{name.charAt(0).toUpperCase()}</span>
-        <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-accent ring-2 ring-paper" />
+      <span className="relative grid size-9 place-items-center rounded-xl bg-gradient-to-tr from-accent to-orange-400 text-white shadow-glow">
+        <span className="font-display font-extrabold text-lg leading-none">{name.charAt(0).toUpperCase()}</span>
+        <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-emerald-400 ring-2 ring-paper" />
       </span>
-      <span className="display text-[1.35rem] leading-none">{name}</span>
+      <span className="font-display font-bold text-[1.2rem] tracking-tight leading-none text-ink">{name}</span>
     </span>
   );
 }
@@ -168,8 +168,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         Skip to main content
       </a>
 
-      <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
-        <div className="glass mx-auto flex h-16 max-w-[1360px] items-center justify-between gap-4 rounded-full pl-5 pr-2.5">
+      <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4 transition-all duration-300">
+        <div className="glass-dock mx-auto flex h-16 max-w-[1360px] items-center justify-between gap-4 rounded-full pl-5 pr-2.5">
           <div className="flex items-center gap-8">
             <Link to="/" aria-label={`${settings.org_name} home`} className="rounded-full">
               <Logo name={settings.org_name} />

@@ -122,7 +122,7 @@ export const HomePage: React.FC = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="display text-[2.9rem] sm:text-6xl lg:text-[4.6rem]"
+              className="display text-[2.75rem] sm:text-6xl lg:text-[4.4rem] font-extrabold tracking-tight"
             >
               Skills you can use on Monday, taught live by people who do the work.
             </motion.h1>
@@ -130,31 +130,34 @@ export const HomePage: React.FC = () => {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-7 max-w-xl text-lg text-ink-2"
+              className="mt-6 max-w-xl text-lg text-ink-2 leading-relaxed"
             >
-              {settings.org_tagline}. Join live classes, learn at your own pace, and keep every book and guide in one library.
+              {settings.org_tagline}. Join interactive live classes, learn at your own pace, and keep every guide and curriculum in one permanent library.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-9 flex flex-wrap items-center gap-3"
+              className="mt-8 flex flex-wrap items-center gap-3.5"
             >
-              <LinkButton to="/courses" size="lg" iconRight={<ArrowRight className="size-4" />}>
+              <LinkButton to="/courses" size="lg" variant="accent" iconRight={<ArrowRight className="size-4" />}>
                 Browse courses
               </LinkButton>
-              <LinkButton to={user ? '/student/dashboard' : '/auth?mode=signup'} variant="secondary" size="lg">
+              <LinkButton to={user ? '/student/dashboard' : '/auth?mode=signup'} variant="glass" size="lg">
                 {user ? 'Go to my dashboard' : 'Create free account'}
               </LinkButton>
             </motion.div>
-            <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm text-ink-2">
+            <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3.5 text-sm font-medium text-ink-2">
               {[
-                { icon: Radio, text: 'Live classrooms' },
-                { icon: Smartphone, text: 'Pay with Mobile Money or card' },
-                { icon: ShieldCheck, text: 'Your purchases stay yours' },
+                { icon: Radio, text: 'Live WebRTC classrooms' },
+                { icon: Smartphone, text: 'Mobile Money & Card instant checkout' },
+                { icon: ShieldCheck, text: 'Direct access & lifetime library' },
               ].map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-center gap-2.5">
-                  <Icon className="size-[18px] text-accent-ink" aria-hidden="true" /> {text}
+                  <span className="grid size-7 place-items-center rounded-full bg-accent-soft text-accent shrink-0">
+                    <Icon className="size-3.5" aria-hidden="true" />
+                  </span>
+                  <span>{text}</span>
                 </li>
               ))}
             </ul>

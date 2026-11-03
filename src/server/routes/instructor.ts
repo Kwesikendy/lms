@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getDb, newId, nowIso, withTransaction, writeAuditLog } from '../db/index.js';
 import { requireRole } from '../middleware/auth.js';
 import { validateUploadMetadata, storePrivateObject } from '../services/storage.js';
-import type { DatabaseSync } from 'node:sqlite';
+import type { DatabaseSync } from '../db/index.js';
 
 export const instructorRouter = Router();
 

@@ -34,9 +34,9 @@ import type { Order, Product, User } from '../../../shared/types.js';
 type AuthMode = 'signin' | 'signup' | 'forgot';
 
 const devAccounts = [
-  { label: 'Student', email: 'kofi.student@aetheracademy.edu.gh' },
-  { label: 'Instructor', email: 'kwame.asante@aetheracademy.edu.gh' },
-  { label: 'Admin', email: 'admin@aetheracademy.edu.gh' },
+  { label: 'Learner', email: 'student@lms.local', role: 'Student Portal' },
+  { label: 'Instructor', email: 'instructor@lms.local', role: 'Curriculum & Live' },
+  { label: 'Admin', email: 'admin@lms.local', role: 'Platform Oversight' },
 ];
 
 export const AuthPage: React.FC = () => {
@@ -65,6 +65,27 @@ export const AuthPage: React.FC = () => {
     else if (u.role === 'admin') navigate('/admin/dashboard');
     else if (u.role === 'instructor') navigate('/instructor/dashboard');
     else navigate('/student/dashboard');
+  };
+
+  const quickLogin = async (demoEmail: string) => {
+    setMode('signin');
+    setEmail(demoEmail);
+    setPassword('Password123!');
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await apiRequest<{ token: string; user: User }>('/api/auth/signin', {
+        method: 'POST',
+        body: JSON.stringify({ email: demoEmail, password: 'Password123!' }),
+      });
+      await loginWithToken(res.token, res.user);
+      notify({ type: 'success', title: `Signed in as ${res.user.full_name}` });
+      goAfterLogin(res.user);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Demo sign-in failed. Please retry.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -264,28 +285,32 @@ export const AuthPage: React.FC = () => {
             </motion.div>
           </AnimatePresence>
 
-          {import.meta.env.DEV && (
-            <div className="mt-10 rounded-2xl border border-dashed border-line-strong p-4">
-              <p className="mb-3 text-xs text-ink-3">Development accounts (password: Password123!)</p>
-              <div className="flex flex-wrap gap-2">
-                {devAccounts.map((a) => (
-                  <button
-                    key={a.email}
-                    type="button"
-                    onClick={() => {
-                      setMode('signin');
-                      setEmail(a.email);
-                      setPassword('Password123!');
-                      setError(null);
-                    }}
-                    className="rounded-full border border-line-strong px-3.5 py-1.5 text-xs font-medium transition-colors hover:border-ink"
-                  >
-                    {a.label}
-                  </button>
-                ))}
-              </div>
+          <div className="mt-8 rounded-2xl glass-subtle p-4 border border-line">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-ink-3 font-semibold">
+                Instant 1-Click Demo Access
+              </span>
+              <span className="text-[11px] text-ink-3 font-mono">Password123!</span>
             </div>
-          )}
+            <div className="grid grid-cols-3 gap-2.5">
+              {devAccounts.map((a) => (
+                <button
+                  key={a.email}
+                  type="button"
+                  disabled={loading}
+                  onClick={() => quickLogin(a.email)}
+                  className="group relative flex flex-col items-center justify-center rounded-xl border border-line bg-card/60 p-2.5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:bg-card hover:shadow-soft active:scale-95 disabled:opacity-50 cursor-pointer"
+                >
+                  <span className="text-xs font-semibold text-ink group-hover:text-accent transition-colors">
+                    {a.label}
+                  </span>
+                  <span className="text-[10px] text-ink-3 truncate max-w-full mt-0.5">
+                    {a.role}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

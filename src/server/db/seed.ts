@@ -84,6 +84,30 @@ export function ensureSeedData(): void {
         title: 'Product Designer & Frontend Developer',
         bio: 'Focused on high-craft UI engineering and real-time collaboration tools.',
       },
+      {
+        id: 'usr_stud_demo',
+        email: 'student@lms.local',
+        full_name: 'Kofi Boateng',
+        role: 'student',
+        title: 'Full-Stack Software Engineer',
+        bio: 'Building resilient financial and educational products.',
+      },
+      {
+        id: 'usr_inst_demo',
+        email: 'instructor@lms.local',
+        full_name: 'Dr. Kwame Asante',
+        role: 'instructor',
+        title: 'Principal Distributed Systems Architect',
+        bio: 'Leading real-time WebRTC and distributed systems engineering.',
+      },
+      {
+        id: 'usr_admin_demo',
+        email: 'admin@lms.local',
+        full_name: 'Nana Ama Mensah',
+        role: 'admin',
+        title: 'Director of Academic Operations',
+        bio: 'Platform administration and institutional governance.',
+      },
     ];
 
     for (const u of users) {

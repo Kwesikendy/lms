@@ -5,7 +5,7 @@
   "description": "Premium Glassmorphism Learning Management System with LiveKit Classroom & Ghana-first Payments",
   "type": "module",
   "engines": {
-    "node": "22.x"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "node --import tsx src/server/index.ts",
@@ -27,6 +27,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0",
+    "sql.js": "^1.15.2",
     "tailwind-merge": "^3.1.0",
     "tailwindcss": "^4.1.0",
     "zod": "^3.24.2"
@@ -36,6 +37,7 @@
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/sql.js": "^1.4.11",
     "@types/supertest": "^6.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "supertest": "^7.1.0",

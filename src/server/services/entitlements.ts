@@ -1,4 +1,4 @@
-import type { DatabaseSync } from 'node:sqlite';
+import type { DatabaseSync } from '../db/index.js';
 import { getDb, newId, nowIso } from '../db/index.js';
 
 export function hasActiveEntitlement(

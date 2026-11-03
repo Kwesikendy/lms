@@ -103,6 +103,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const refreshAuth = useCallback(async () => {
+    const token = getClientAuthToken();
+    if (!token) {
+      setUser(null);
+      setEntitlements([]);
+      setNotifications([]);
+      setLoadingAuth(false);
+      return;
+    }
     try {
       const data = await apiRequest<{
         user: User;
@@ -112,11 +120,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setUser(data.user);
       setEntitlements(data.entitlements || []);
       setNotifications(data.notifications || []);
-    } catch {
-      setUser(null);
-      setEntitlements([]);
-      setNotifications([]);
-      if (getClientAuthToken()) setClientAuthToken(null);
+    } catch (err: unknown) {
+      const status = (err as { status?: number })?.status;
+      // ONLY invalidate credentials if the server explicitly returns 401 Unauthorized
+      if (status === 401) {
+        setUser(null);
+        setEntitlements([]);
+        setNotifications([]);
+        setClientAuthToken(null);
+      }
     } finally {
       setLoadingAuth(false);
     }
@@ -131,9 +143,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     async (token: string, loggedInUser: User) => {
       setClientAuthToken(token);
       setUser(loggedInUser);
-      await refreshAuth();
+      try {
+        const data = await apiRequest<{
+          user: User;
+          entitlements: Entitlement[];
+          notifications: NotificationItem[];
+        }>('/api/auth/me');
+        if (data.user) setUser(data.user);
+        if (data.entitlements) setEntitlements(data.entitlements);
+        if (data.notifications) setNotifications(data.notifications);
+      } catch {
+        // Retain loggedInUser even if entitlements call experiences network delay
+      }
     },
-    [refreshAuth]
+    []
   );
 
   const logout = useCallback(async () => {
