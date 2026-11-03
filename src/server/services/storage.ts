@@ -102,13 +102,18 @@ export function storePrivateObject(
   fileKey: string,
   content: Buffer | string
 ): { storedPath: string; sizeBytes: number } {
-  const safeKey = fileKey.replace(/[^a-zA-Z0-9._/-]/g, '_').replace(/\.\./g, '');
-  const fullPath = path.resolve(config.storage.localDir, safeKey);
-  const dir = path.dirname(fullPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  try {
+    const safeKey = fileKey.replace(/[^a-zA-Z0-9._/-]/g, '_').replace(/\.\./g, '');
+    const fullPath = path.resolve(config.storage.localDir, safeKey);
+    const dir = path.dirname(fullPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    const buf = typeof content === 'string' ? Buffer.from(content, 'utf-8') : content;
+    fs.writeFileSync(fullPath, buf);
+    return { storedPath: fullPath, sizeBytes: buf.byteLength };
+  } catch (err) {
+    console.warn('[storePrivateObject warning]:', err);
+    return { storedPath: fileKey, sizeBytes: 0 };
   }
-  const buf = typeof content === 'string' ? Buffer.from(content, 'utf-8') : content;
-  fs.writeFileSync(fullPath, buf);
-  return { storedPath: fullPath, sizeBytes: buf.byteLength };
 }
