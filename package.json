@@ -8,10 +8,11 @@
   },
   "scripts": {
     "dev": "node --import tsx src/server/index.ts",
-    "build": "vite build && tsc --noEmit",
+    "build": "npm run build:api && vite build && tsc --noEmit",
     "start": "node --import tsx src/server/index.ts",
     "test": "vitest run",
-    "db:seed": "tsx src/server/db/seed-cli.ts"
+    "db:seed": "tsx src/server/db/seed-cli.ts",
+    "build:api": "esbuild src/server/serverless.ts --bundle --platform=node --target=node20 --format=cjs --outfile=api/index.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.0",

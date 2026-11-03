@@ -26137,12 +26137,12 @@ var require_sql_wasm = __commonJS({
   }
 });
 
-// api/index.ts
-var index_exports = {};
-__export(index_exports, {
-  default: () => index_default
+// src/server/serverless.ts
+var serverless_exports = {};
+__export(serverless_exports, {
+  default: () => serverless_default
 });
-module.exports = __toCommonJS(index_exports);
+module.exports = __toCommonJS(serverless_exports);
 
 // src/server/app.ts
 var import_express8 = __toESM(require_express2());
@@ -44335,7 +44335,7 @@ function createApp(options) {
   return app2;
 }
 
-// api/index.ts
+// src/server/serverless.ts
 var appInstance = null;
 function getApp() {
   if (!appInstance) {
@@ -44344,7 +44344,7 @@ function getApp() {
   return appInstance;
 }
 var app = getApp();
-var index_default = app;
+var serverless_default = app;
 if (typeof module !== "undefined" && module.exports) {
   module.exports = app;
   module.exports.default = app;

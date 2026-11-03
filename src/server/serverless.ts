@@ -1,4 +1,4 @@
-import { createApp } from '../src/server/app.js';
+import { createApp } from './app.js';
 
 let appInstance: ReturnType<typeof createApp> | null = null;
 
