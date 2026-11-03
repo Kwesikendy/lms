@@ -32,6 +32,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // node_modules/ms/index.js
 var require_ms = __commonJS({
@@ -26136,6 +26137,13 @@ var require_sql_wasm = __commonJS({
   }
 });
 
+// api/index.ts
+var index_exports = {};
+__export(index_exports, {
+  default: () => index_default
+});
+module.exports = __toCommonJS(index_exports);
+
 // src/server/app.ts
 var import_express8 = __toESM(require_express2());
 
@@ -27532,6 +27540,26 @@ var config = {
 };
 
 // src/server/middleware/security.ts
+var getClientIp = (req) => {
+  try {
+    const forwarded = req.headers["x-forwarded-for"];
+    if (typeof forwarded === "string") {
+      return forwarded.split(",")[0].trim();
+    }
+    if (Array.isArray(forwarded) && forwarded[0]) {
+      return forwarded[0].split(",")[0].trim();
+    }
+    const realIp = req.headers["x-real-ip"];
+    if (typeof realIp === "string") {
+      return realIp;
+    }
+    if (req.socket?.remoteAddress) {
+      return req.socket.remoteAddress;
+    }
+  } catch {
+  }
+  return "127.0.0.1";
+};
 function applySecurityMiddleware(app) {
   app.use(
     helmet({
@@ -27563,12 +27591,14 @@ function applySecurityMiddleware(app) {
     }
     next();
   });
-  if (config.nodeEnv !== "test") {
+  if (config.nodeEnv !== "test" && !process.env.VERCEL) {
     const apiLimiter = lib_default({
       windowMs: 15 * 60 * 1e3,
       max: 600,
       standardHeaders: true,
       legacyHeaders: false,
+      keyGenerator: (req) => getClientIp(req),
+      skip: () => Boolean(process.env.VERCEL),
       message: { error: "Too many requests. Please try again shortly." }
     });
     app.use("/api", apiLimiter);
@@ -27579,6 +27609,8 @@ var authRateLimiter = lib_default({
   max: process.env.NODE_ENV === "test" ? 1e3 : 30,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => getClientIp(req),
+  skip: () => Boolean(process.env.VERCEL || process.env.NODE_ENV === "test"),
   message: { error: "Too many authentication attempts. Please wait 15 minutes." }
 });
 
@@ -32481,7 +32513,7 @@ authRouter.post("/signup", authRateLimiter, (req, res) => {
     action: "user.signup",
     targetType: "user",
     targetId: userId,
-    ipAddress: req.ip
+    ipAddress: getClientIp(req)
   });
   const token = createSessionToken(userId, "student");
   setSessionCookie(res, token);
@@ -32532,7 +32564,7 @@ authRouter.post("/signin", authRateLimiter, (req, res) => {
     action: "user.signin",
     targetType: "user",
     targetId: userId,
-    ipAddress: req.ip
+    ipAddress: getClientIp(req)
   });
   let prefs = { email_classes: true, email_receipts: true, in_app: true };
   try {
@@ -44250,6 +44282,15 @@ In an online classroom with 50 students and 1 instructor, a peer-to-peer mesh wo
 // src/server/app.ts
 function createApp(options) {
   const app = (0, import_express8.default)();
+  app.use((req, _res, next) => {
+    if (!req.socket) {
+      req.socket = { remoteAddress: "127.0.0.1" };
+    }
+    if (!req.connection) {
+      req.connection = req.socket;
+    }
+    next();
+  });
   applySecurityMiddleware(app);
   app.use(
     import_express8.default.json({
@@ -44278,9 +44319,11 @@ function createApp(options) {
   app.use("/api/admin", adminRouter);
   app.use(
     (err, _req, res, _next) => {
+      console.error("[API Error caught in app.use]:", err);
       const status = err.statusCode || 500;
       res.status(status).json({
-        error: status >= 500 ? "An unexpected server error occurred." : err.message || "Request failed."
+        error: err.message || "An unexpected server error occurred.",
+        stack: err.stack
       });
     }
   );
@@ -44307,7 +44350,11 @@ function handler(req, res) {
   const app = getApp();
   return app(req, res);
 }
-module.exports = handler;
+var index_default = handler;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = handler;
+  module.exports.default = handler;
+}
 /*! Bundled license information:
 
 depd/index.js:

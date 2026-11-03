@@ -12,6 +12,17 @@ import { ensureSeedData } from './db/seed.js';
 export function createApp(options?: { skipSeed?: boolean }) {
   const app = express();
 
+  // Serverless / Lambda compatibility shim for socket properties
+  app.use((req, _res, next) => {
+    if (!req.socket) {
+      (req as unknown as { socket: { remoteAddress: string } }).socket = { remoteAddress: '127.0.0.1' };
+    }
+    if (!req.connection) {
+      (req as unknown as { connection: typeof req.socket }).connection = req.socket;
+    }
+    next();
+  });
+
   applySecurityMiddleware(app);
 
   // Capture raw body for cryptographic webhook signature verification (Paystack, Hubtel, LiveKit)
@@ -52,12 +63,11 @@ export function createApp(options?: { skipSeed?: boolean }) {
       res: express.Response,
       _next: express.NextFunction
     ) => {
+      console.error('[API Error caught in app.use]:', err);
       const status = (err as { statusCode?: number }).statusCode || 500;
       res.status(status).json({
-        error:
-          status >= 500
-            ? 'An unexpected server error occurred.'
-            : err.message || 'Request failed.',
+        error: err.message || 'An unexpected server error occurred.',
+        stack: err.stack,
       });
     }
   );

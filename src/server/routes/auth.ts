@@ -10,7 +10,7 @@ import {
   clearSessionCookie,
   requireAuth,
 } from '../middleware/auth.js';
-import { authRateLimiter } from '../middleware/security.js';
+import { authRateLimiter, getClientIp } from '../middleware/security.js';
 
 export const authRouter = Router();
 
@@ -97,7 +97,7 @@ authRouter.post('/signup', authRateLimiter, (req, res) => {
     action: 'user.signup',
     targetType: 'user',
     targetId: userId,
-    ipAddress: req.ip,
+    ipAddress: getClientIp(req),
   });
 
   const token = createSessionToken(userId, 'student');
@@ -158,7 +158,7 @@ authRouter.post('/signin', authRateLimiter, (req, res) => {
     action: 'user.signin',
     targetType: 'user',
     targetId: userId,
-    ipAddress: req.ip,
+    ipAddress: getClientIp(req),
   });
 
   let prefs = { email_classes: true, email_receipts: true, in_app: true };
