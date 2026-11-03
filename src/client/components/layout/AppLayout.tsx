@@ -51,12 +51,16 @@ const instructorNav: NavItem[] = [
 
 function Logo({ name }: { name: string }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <span className="relative grid size-9 place-items-center rounded-xl bg-gradient-to-tr from-accent to-orange-400 text-white shadow-glow">
-        <span className="font-display font-extrabold text-lg leading-none">{name.charAt(0).toUpperCase()}</span>
-        <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-emerald-400 ring-2 ring-paper" />
+    <span className="flex items-center gap-2.5 group">
+      <span className="relative grid size-9 place-items-center rounded-2xl bg-gradient-to-tr from-accent via-orange-500 to-amber-400 text-white shadow-glow transition-transform duration-300 group-hover:scale-105">
+        <span className="font-display font-extrabold text-[1.1rem] leading-none drop-shadow-xs">
+          {name.charAt(0).toUpperCase()}
+        </span>
+        <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-ink" />
       </span>
-      <span className="font-display font-bold text-[1.2rem] tracking-tight leading-none text-ink">{name}</span>
+      <span className="font-display font-bold text-[1.22rem] tracking-tight leading-none text-ink">
+        {name}
+      </span>
     </span>
   );
 }
@@ -163,15 +167,15 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   ];
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-paper noise-bg">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[90] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-on-ink">
         Skip to main content
       </a>
 
       <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4 transition-all duration-300">
-        <div className="glass-dock mx-auto flex h-16 max-w-[1360px] items-center justify-between gap-4 rounded-full pl-5 pr-2.5">
-          <div className="flex items-center gap-8">
-            <Link to="/" aria-label={`${settings.org_name} home`} className="rounded-full">
+        <div className="glass-pill mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 rounded-full pl-5 pr-2.5 transition-all duration-300">
+          <div className="flex items-center gap-7">
+            <Link to="/" aria-label={`${settings.org_name} home`} className="rounded-full focus-visible:outline-none">
               <Logo name={settings.org_name} />
             </Link>
             <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
@@ -181,8 +185,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                   to={l.to}
                   className={({ isActive }) =>
                     cn(
-                      'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                      isActive ? 'bg-ink/8 text-ink' : 'text-ink-2 hover:bg-ink/5 hover:text-ink'
+                      'rounded-full px-4 py-2 text-sm font-medium transition-all duration-200',
+                      isActive ? 'bg-ink/8 text-ink font-semibold' : 'text-ink-2 hover:bg-ink/5 hover:text-ink'
                     )
                   }
                 >
@@ -199,9 +203,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search courses"
+                placeholder="Search courses..."
                 aria-label="Search courses"
-                className="h-10 w-48 rounded-full bg-ink/6 pl-10 pr-4 text-sm outline-none transition-[width,background-color] duration-300 placeholder:text-ink-3 focus:w-64 focus:bg-card focus:ring-2 focus:ring-ink/15"
+                className="h-10 w-44 rounded-full bg-ink/6 pl-10 pr-4 text-sm outline-none transition-[width,background-color] duration-300 placeholder:text-ink-3 focus:w-60 focus:bg-card focus:ring-2 focus:ring-ink/15"
               />
             </form>
 
@@ -319,11 +323,11 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 </Popover>
               </>
             ) : (
-              <div className="hidden items-center gap-1.5 sm:flex">
-                <LinkButton to="/auth" variant="ghost" size="sm">
+              <div className="hidden items-center gap-2 sm:flex">
+                <LinkButton to="/auth" variant="ghost" size="sm" className="rounded-full px-4 text-[13px] font-medium text-ink-2 hover:text-ink">
                   Sign in
                 </LinkButton>
-                <LinkButton to="/auth?mode=signup" variant="primary" size="sm">
+                <LinkButton to="/auth?mode=signup" variant="accent" size="sm" className="rounded-full px-5 text-[13px] font-semibold shadow-glow">
                   Get started
                 </LinkButton>
               </div>
@@ -344,39 +348,41 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.2 }}
-              className="glass mx-auto mt-2 max-w-[1360px] rounded-3xl p-3 md:hidden"
+              className="glass-card-elevated mx-auto mt-2 max-w-6xl rounded-3xl p-4 md:hidden shadow-lift"
             >
-              <form onSubmit={submitSearch} role="search" className="relative mb-2">
+              <form onSubmit={submitSearch} role="search" className="relative mb-3">
                 <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink-3" aria-hidden="true" />
                 <input
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search courses"
+                  placeholder="Search courses..."
                   aria-label="Search courses"
                   className="h-11 w-full rounded-full bg-ink/6 pl-11 pr-4 text-sm outline-none focus:ring-2 focus:ring-ink/15"
                 />
               </form>
-              {topLinks.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setMenuOpen(false)}
-                  className="block rounded-2xl px-4 py-3 text-[15px] font-medium transition-colors hover:bg-ink/5"
-                >
-                  {l.label}
-                </Link>
-              ))}
+              <div className="space-y-1">
+                {topLinks.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-2xl px-4 py-3 text-[15px] font-medium transition-colors hover:bg-ink/5"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
               {!user && (
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  <LinkButton to="/auth" variant="secondary" onClick={() => setMenuOpen(false)}>
+                <div className="mt-4 grid grid-cols-2 gap-2 pt-2 border-t border-line">
+                  <LinkButton to="/auth" variant="secondary" onClick={() => setMenuOpen(false)} className="rounded-full">
                     Sign in
                   </LinkButton>
-                  <LinkButton to="/auth?mode=signup" onClick={() => setMenuOpen(false)}>
+                  <LinkButton to="/auth?mode=signup" variant="accent" onClick={() => setMenuOpen(false)} className="rounded-full shadow-glow">
                     Get started
                   </LinkButton>
                 </div>
@@ -458,30 +464,58 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       )}
 
       {!isPortal && (
-        <footer className="mt-24 border-t border-line">
-          <div className="mx-auto grid max-w-[1360px] gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="lg:col-span-2">
-              <Logo name={settings.org_name} />
-              <p className="mt-4 max-w-sm text-sm text-ink-3">{settings.org_tagline}</p>
+        <footer className="mt-32 border-t border-line/60 bg-gradient-to-b from-transparent to-ink/[0.02] dark:to-white/[0.02]">
+          <div className="mx-auto max-w-6xl px-6 py-16">
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="lg:col-span-2">
+                <Logo name={settings.org_name} />
+                <p className="mt-4 max-w-sm text-sm text-ink-3 leading-relaxed">
+                  {(settings.org_tagline || '').replace(/—/g, ',')}. Interactive classes, project feedback, and lifetime digital resources.
+                </p>
+                <div className="mt-6 flex items-center gap-2.5">
+                  <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-medium text-ink-3">Live Classrooms & Mobile Money Gateways Active</span>
+                </div>
+              </div>
+              <div>
+                <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-ink-3">Programs</p>
+                <ul className="space-y-2.5 text-sm text-ink-2">
+                  <li><Link className="transition-colors hover:text-accent" to="/courses">All courses</Link></li>
+                  <li><Link className="transition-colors hover:text-accent" to="/resources">Digital library</Link></li>
+                  <li><Link className="transition-colors hover:text-accent" to="/student/live">Live masterclasses</Link></li>
+                  <li><Link className="transition-colors hover:text-accent" to="/courses?category=engineering">Engineering tracks</Link></li>
+                </ul>
+              </div>
+              <div>
+                <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-ink-3">Platform</p>
+                <ul className="space-y-2.5 text-sm text-ink-2">
+                  <li><Link className="transition-colors hover:text-accent" to="/auth">Student portal</Link></li>
+                  <li><Link className="transition-colors hover:text-accent" to="/auth?mode=signup">Create free account</Link></li>
+                  <li><a className="transition-colors hover:text-accent" href={`mailto:${settings.support_email}`}>Admissions & Support</a></li>
+                  <li><span className="text-xs text-ink-3">Ghana MoMo & Global Cards</span></li>
+                </ul>
+              </div>
+              <div>
+                <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-ink-3">Direct Support</p>
+                <div className="rounded-2xl border border-line bg-card/60 p-4 backdrop-blur-md">
+                  <p className="text-xs text-ink-3">Need personalized syllabus advisory?</p>
+                  <a
+                    href={`mailto:${settings.support_email}`}
+                    className="mt-2.5 inline-block text-xs font-semibold text-accent hover:underline"
+                  >
+                    {settings.support_email}
+                  </a>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold">Learn</p>
-              <ul className="space-y-2 text-sm text-ink-3">
-                <li><Link className="hover:text-ink" to="/courses">All courses</Link></li>
-                <li><Link className="hover:text-ink" to="/resources">Digital library</Link></li>
-                <li><Link className="hover:text-ink" to="/student/live">Live classes</Link></li>
-              </ul>
+            <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-line/60 pt-8 sm:flex-row text-xs text-ink-3">
+              <p>© {new Date().getFullYear()} {settings.org_name}. Crafted with precision for high-growth practitioners.</p>
+              <div className="flex gap-6">
+                <span>Terms of Service</span>
+                <span>Privacy Shield</span>
+                <span>Security</span>
+              </div>
             </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold">Help</p>
-              <ul className="space-y-2 text-sm text-ink-3">
-                <li><a className="hover:text-ink" href={`mailto:${settings.support_email}`}>{settings.support_email}</a></li>
-                <li><Link className="hover:text-ink" to="/auth">Sign in</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-line py-5 text-center text-xs text-ink-3">
-            © {new Date().getFullYear()} {settings.org_name}. All rights reserved.
           </div>
         </footer>
       )}

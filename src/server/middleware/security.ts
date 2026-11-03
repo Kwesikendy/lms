@@ -75,10 +75,10 @@ export function applySecurityMiddleware(app: Express): void {
 
 export const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'test' ? 1000 : 30,
+  max: config.nodeEnv === 'production' ? 30 : 500,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => getClientIp(req),
-  skip: () => Boolean(process.env.VERCEL || process.env.NODE_ENV === 'test'),
-  message: { error: 'Too many authentication attempts. Please wait 15 minutes.' },
+  skip: () => Boolean(process.env.VERCEL || config.nodeEnv === 'test'),
+  message: { error: 'Too many authentication attempts. Please wait a few minutes and try again.' },
 });

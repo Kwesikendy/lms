@@ -8,25 +8,23 @@ export function ensureSeedData(): void {
   const userCount = (
     db.prepare(`SELECT COUNT(*) as c FROM users`).get() as { c: number }
   ).c;
-  if (userCount > 0) {
-    return;
-  }
 
-  withTransaction((tx) => {
-    const now = nowIso();
+  if (userCount === 0) {
+    withTransaction((tx) => {
+      const now = nowIso();
 
-    // 1. Configurable Platform Settings (No hardcoded org names in UI)
-    const defaultSettings: Record<string, string> = {
-      org_name: 'Aether Academy',
-      org_tagline: 'Executive Technology, FinTech & Product Engineering Institute — Accra & Global',
-      support_email: 'admissions@aetheracademy.edu.gh',
-      primary_currency: 'GHS',
-      accent_color: '#22D3EE',
-      paystack_enabled: 'true',
-      hubtel_enabled: 'true',
-      livekit_enabled: 'true',
-      allow_registration: 'true',
-    };
+      // 1. Configurable Platform Settings (No hardcoded org names in UI)
+      const defaultSettings: Record<string, string> = {
+        org_name: 'Aether Academy',
+        org_tagline: 'Practical technology courses, live classes and a digital library',
+        support_email: 'admissions@aetheracademy.edu.gh',
+        primary_currency: 'GHS',
+        accent_color: '#22D3EE',
+        paystack_enabled: 'true',
+        hubtel_enabled: 'true',
+        livekit_enabled: 'true',
+        allow_registration: 'true',
+      };
 
     for (const [k, v] of Object.entries(defaultSettings)) {
       tx.prepare(
@@ -753,5 +751,124 @@ export function ensureSeedData(): void {
       `INSERT INTO notifications (id, user_id, title, message, link, is_read, created_at)
        VALUES (?, ?, 'Live Session in Progress', 'Dr. Kwame Asante has opened the Live Architecture Clinic classroom.', '/classroom/ses_live_01', 0, ?)`
     ).run(newId('ntf'), student1Id, now);
+    });
+  }
+
+  // Always verify and upsert demo accounts & student enrollments
+  withTransaction((tx) => {
+    ensureDemoAccountsAndAccess(tx);
   });
 }
+
+function ensureDemoAccountsAndAccess(tx: any): void {
+  const now = nowIso();
+  const defaultPass = hashPassword('Password123!');
+
+  const users = [
+    {
+      id: 'usr_admin_01',
+      email: 'admin@aetheracademy.edu.gh',
+      full_name: 'Nana Ama Mensah',
+      role: 'admin',
+      title: 'Director of Academic Operations',
+      bio: 'Leads curriculum accreditation, financial governance, and digital learning operations across West Africa.',
+    },
+    {
+      id: 'usr_inst_01',
+      email: 'kwame.asante@aetheracademy.edu.gh',
+      full_name: 'Dr. Kwame Asante',
+      role: 'instructor',
+      title: 'Principal Distributed Systems Architect',
+      bio: 'Former Principal Engineer building high-throughput payment switches and cloud-native infrastructure across Africa and Europe.',
+    },
+    {
+      id: 'usr_inst_02',
+      email: 'efua.danquah@aetheracademy.edu.gh',
+      full_name: 'Efua Danquah',
+      role: 'instructor',
+      title: 'Lead Design Systems & Product Strategist',
+      bio: 'Award-winning interface architect specializing in spatial computing, glassmorphic design systems, and WCAG accessibility.',
+    },
+    {
+      id: 'usr_stud_01',
+      email: 'kofi.student@aetheracademy.edu.gh',
+      full_name: 'Kofi Boateng',
+      role: 'student',
+      title: 'Full-Stack Software Engineer',
+      bio: 'Building resilient financial and educational products in Accra.',
+    },
+    {
+      id: 'usr_stud_02',
+      email: 'akua.learner@aetheracademy.edu.gh',
+      full_name: 'Akua Osei',
+      role: 'student',
+      title: 'Product Designer & Frontend Developer',
+      bio: 'Focused on high-craft UI engineering and real-time collaboration tools.',
+    },
+    {
+      id: 'usr_stud_demo',
+      email: 'student@lms.local',
+      full_name: 'Kofi Boateng',
+      role: 'student',
+      title: 'Full-Stack Software Engineer',
+      bio: 'Building resilient financial and educational products.',
+    },
+    {
+      id: 'usr_inst_demo',
+      email: 'instructor@lms.local',
+      full_name: 'Dr. Kwame Asante',
+      role: 'instructor',
+      title: 'Principal Distributed Systems Architect',
+      bio: 'Leading real-time WebRTC and distributed systems engineering.',
+    },
+    {
+      id: 'usr_admin_demo',
+      email: 'admin@lms.local',
+      full_name: 'Nana Ama Mensah',
+      role: 'admin',
+      title: 'Director of Academic Operations',
+      bio: 'Platform administration and institutional governance.',
+    },
+  ];
+
+  for (const u of users) {
+    const existing = tx.prepare(`SELECT id FROM users WHERE LOWER(email) = LOWER(?)`).get(u.email);
+    if (!existing) {
+      tx.prepare(
+        `INSERT INTO users (id, email, password_hash, full_name, role, title, bio, status, email_verified, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'active', 1, ?, ?)`
+      ).run(u.id, u.email, defaultPass, u.full_name, u.role, u.title, u.bio, now, now);
+    } else {
+      tx.prepare(
+        `UPDATE users SET password_hash = ?, status = 'active' WHERE LOWER(email) = LOWER(?)`
+      ).run(defaultPass, u.email);
+    }
+  }
+
+  // Ensure student demo users have active enrollments to courses
+  for (const studentId of ['usr_stud_01', 'usr_stud_demo']) {
+    try {
+      grantEntitlement({
+        db: tx,
+        userId: studentId,
+        targetType: 'course',
+        targetId: 'crs_webrtc_livekit',
+        source: 'free_enrollment',
+      });
+    } catch {
+      // already enrolled
+    }
+    try {
+      grantEntitlement({
+        db: tx,
+        userId: studentId,
+        targetType: 'course',
+        targetId: 'crs_fintech_arch',
+        source: 'purchase',
+      });
+    } catch {
+      // already enrolled
+    }
+  }
+}
+

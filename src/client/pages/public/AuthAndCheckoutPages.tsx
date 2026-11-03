@@ -57,7 +57,12 @@ export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate(redirect || '/student/dashboard', { replace: true });
+    if (user) {
+      if (redirect) navigate(redirect, { replace: true });
+      else if (user.role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else if (user.role === 'instructor') navigate('/instructor/dashboard', { replace: true });
+      else navigate('/student/dashboard', { replace: true });
+    }
   }, [user, redirect, navigate]);
 
   const goAfterLogin = (u: User) => {
@@ -204,6 +209,7 @@ export const AuthPage: React.FC = () => {
                   <InputField
                     label="Full name"
                     required
+                    minLength={2}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     autoComplete="name"
